@@ -1,7 +1,6 @@
 package br.com.unipds.csvreader.model;
 
 import br.com.unipds.csvreader.core.CsvRecordReader;
-
 import java.util.function.Consumer;
 
 public record Product(
@@ -21,6 +20,10 @@ public record Product(
 ) {
 
     public static void processarCsv(String caminhoArquivo, Consumer<Product> processador) {
-        new CsvRecordReader().process(caminhoArquivo, true, Product.class, processador);
+        // CORREÇÃO: Usar o Builder aqui!
+        CsvRecordReader.builder()
+                .withHeader(true)
+                .build()
+                .process(caminhoArquivo, Product.class, processador);
     }
 }
