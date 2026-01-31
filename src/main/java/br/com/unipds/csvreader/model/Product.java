@@ -1,6 +1,7 @@
 package br.com.unipds.csvreader.model;
 
 import br.com.unipds.csvreader.core.CsvRecordReader;
+
 import java.util.function.Consumer;
 
 public class Product {
@@ -22,19 +23,57 @@ public class Product {
     public Product() {
     }
 
-    public long getIndex() { return index; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public String getBrand() { return brand; }
-    public String getCategory() { return category; }
-    public double getPrice() { return price; }
-    public String getCurrency() { return currency; }
-    public int getStock() { return stock; }
-    public String getEan() { return ean; }
-    public String getColor() { return color; }
-    public String getSize() { return size; }
-    public String getAvailability() { return availability; }
-    public String getInternalId() { return internalId; }
+    public long getIndex() {
+        return index;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public String getCurrency() {
+        return currency;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public String getEan() {
+        return ean;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public String getAvailability() {
+        return availability;
+    }
+
+    public String getInternalId() {
+        return internalId;
+    }
 
     public static void processarCsv(String caminhoArquivo, Consumer<Product> processador) {
         CsvRecordReader.builder()

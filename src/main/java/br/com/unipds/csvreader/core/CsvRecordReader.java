@@ -147,7 +147,9 @@ public class CsvRecordReader {
     private String detectSeparator(Path path) {
         try (Stream<String> lines = Files.lines(path)) {
             return detectSeparatorInLine(lines.findFirst().orElse(""));
-        } catch (IOException e) { return ","; }
+        } catch (IOException e) {
+            return ",";
+        }
     }
 
     private String detectSeparatorInLine(String line) {

@@ -1,6 +1,7 @@
 package br.com.unipds.csvreader.model;
 
 import br.com.unipds.csvreader.core.CsvRecordReader;
+
 import java.util.List;
 
 public class Disciplina {
