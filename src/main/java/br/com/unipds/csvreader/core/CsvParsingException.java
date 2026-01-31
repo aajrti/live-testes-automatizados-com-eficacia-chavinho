@@ -2,10 +2,6 @@ package br.com.unipds.csvreader.core;
 
 public class CsvParsingException extends RuntimeException {
 
-  public CsvParsingException(Throwable cause) {
-    super(cause);
-  }
-
   public CsvParsingException(String message) {
     super(message);
   }

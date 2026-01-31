@@ -34,7 +34,7 @@ public class CsvRecordReader {
     }
 
     /*
-     *   Lê String da memória e retorna Lista (CORRIGIDO)
+     *   Lê String da memória e retorna Lista
      */
     public <T> List<T> readString(String csvContent, boolean hasHeader, Class<T> recordClass) {
         if (csvContent == null || csvContent.isBlank()) {
@@ -99,8 +99,8 @@ public class CsvRecordReader {
     }
 
     /*
-     * Utiliza o separador, mas apenas se ele for seguido por um número PAR de aspas"
-     * Garante que sejam ignorados separadores que estão dentro de um texto com aspas.
+     *  Utiliza o separador, mas apenas se ele for seguido por um número par de aspas"
+     *  Garante que sejam ignorados separadores que estão dentro de um texto com aspas.
      */
     private <T> T mapLine(String line, String separator, Class<?>[] types, Constructor<T> constructor) {
         try {
@@ -144,13 +144,12 @@ public class CsvRecordReader {
         Function<String, Object> converter = CONVERTERS.get(type);
         if (converter == null) throw new CsvParsingException("Tipo não suportado: " + type.getName());
 
-        // Se o valor for NULO (coluna faltando), retornamos o valor padrão do primitivo
         if (value == null) {
             if (type == int.class) return 0;
             if (type == long.class) return 0L;
             if (type == double.class) return 0.0;
             if (type == boolean.class) return false;
-            return null; // Para String e outros objetos, null é aceitável
+            return null;
         }
 
         return converter.apply(value);
