@@ -1,8 +1,8 @@
-package br.com.unipds.CsvReader;
+package br.com.unipds.csvreader.core;
 
-import br.com.unipds.CsvReader.model.Disciplina;
-import br.com.unipds.CsvReader.model.ItemCardapio;
-import br.com.unipds.CsvReader.model.Product;
+import br.com.unipds.csvreader.model.Disciplina;
+import br.com.unipds.csvreader.model.ItemCardapio;
+import br.com.unipds.csvreader.model.Product;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

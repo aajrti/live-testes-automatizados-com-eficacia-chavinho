@@ -1,6 +1,6 @@
-package br.com.unipds.CsvReader.model;
+package br.com.unipds.csvreader.model;
 
-import br.com.unipds.CsvReader.CsvRecordReader;
+import br.com.unipds.csvreader.core.CsvRecordReader;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package br.com.unipds.CsvReader;
+package br.com.unipds.csvreader.core;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;

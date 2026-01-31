@@ -1,4 +1,4 @@
-package br.com.unipds.CsvReader;
+package br.com.unipds.csvreader.core;
 
 public class CsvParsingException extends RuntimeException {
 
