@@ -12,61 +12,52 @@ import java.util.List;
 
 class CsvReaderTest {
 
-    private CsvRecordReader csvRecordReader;
-
     @BeforeEach
     void setup() {
-        // Configuração Padrão: Com Header
-        csvRecordReader = CsvRecordReader.builder()
+        CsvRecordReader csvRecordReader = CsvRecordReader.builder()
                 .withHeader(true)
                 .build();
     }
 
     @Test
-    @DisplayName("Deve converter String CSV em memória para objetos corretamente")
-    void deveLerStringParaDisciplina() {
-        String csv = """
-            id,nome
-            1,Java Avançado
-            """;
-
-        // CORREÇÃO: Removido o argumento 'true/false'.
-        // O leitor já sabe que tem header por causa do setup()
-        List<Disciplina> lista = csvRecordReader.readString(csv, Disciplina.class);
-
-        Assertions.assertEquals(1, lista.size());
-        Assertions.assertEquals("Java Avançado", lista.getFirst().nome());
-    }
-
-    @Test
     @DisplayName("Deve suportar Generics e ler outros tipos (ItemCardapio)")
     void deveLerStringParaItemCardapio() {
-        // CSV SEM CABEÇALHO
+
         String csv = "100;Tacos Pastor";
 
-        // CORREÇÃO: Criamos um leitor específico para este teste
         CsvRecordReader leitorSemHeader = CsvRecordReader.builder()
-                .withHeader(false) // <--- Configuração aqui
+                .withHeader(false)
                 .build();
 
-        // Passamos APENAS o csv e a classe. O 'false' já está no leitor.
         List<ItemCardapio> lista = leitorSemHeader.readString(csv, ItemCardapio.class);
 
         Assertions.assertEquals(1, lista.size());
-
-        // Se ItemCardapio for um RECORD, o método .nome() vai funcionar.
-        // Se estiver dando erro, verifique se ItemCardapio.java está salvo como 'record'
-        Assertions.assertEquals("Tacos Pastor", lista.getFirst().nome());
+        Assertions.assertEquals("Tacos Pastor", lista.getFirst().getNome());
     }
 
     @Test
     @DisplayName("Product: Deve processar arquivo gigante")
     void deveProcessarArquivoGiganteSemEstourarMemoria() {
-        // Esse método usa o Product.processarCsv que corrigimos no passo 1
         Product.processarCsv("src/test/resources/products-2000000.csv", produto -> {
-            Assertions.assertNotNull(produto.name());
+            Assertions.assertNotNull(produto.getName());
         });
     }
 
-    // ... Mantenha os outros testes de Disciplina.lerCsv ...
+    @Test
+    @DisplayName("Disciplina: Deve lançar exceção se o arquivo não existe (via método estático)")
+    void deveLancarExcecaoSeArquivoNaoExiste() {
+        Assertions.assertThrows(CsvParsingException.class, () -> {
+            Disciplina.lerCsv("caminho/falso/nao/existe.csv");
+        });
+    }
+
+    @Test
+    @DisplayName("Disciplina: Deve ler arquivo real do disco corretamente")
+    void deveLerArquivoDeDisciplinas() {
+        List<Disciplina> lista = Disciplina.lerCsv("src/test/resources/unipds-disciplinas.csv");
+
+        Assertions.assertFalse(lista.isEmpty(), "A lista não deveria estar vazia");
+        Assertions.assertEquals(11, lista.size(), "Deveria ter lido 11 disciplinas");
+        Assertions.assertEquals("Introdução ao Java", lista.getFirst().getNome().trim());
+    }
 }

@@ -16,24 +16,21 @@ import java.util.stream.Stream;
 
 public class CsvRecordReader {
 
-    // --- CONFIGURAÇÕES DE ESTADO (Definidas pelo Builder) ---
     private final boolean hasHeader;
     private final String separator;
 
-    // Construtor é PRIVADO. Só o Builder pode chamar.
     private CsvRecordReader(boolean hasHeader, String separator) {
         this.hasHeader = hasHeader;
         this.separator = separator;
     }
 
-    // --- LÓGICA DO BUILDER ---
     public static Builder builder() {
         return new Builder();
     }
 
     public static class Builder {
-        private boolean hasHeader = true; // Valor padrão
-        private String separator = null;  // Valor padrão (auto-detect)
+        private boolean hasHeader = true;
+        private String separator = null;
 
         public Builder withHeader(boolean hasHeader) {
             this.hasHeader = hasHeader;
@@ -50,29 +47,23 @@ public class CsvRecordReader {
         }
     }
 
-    // --- MÉTODOS PÚBLICOS (Agora usam a config da instância) ---
-
-    // 1. Ler Arquivo
     public <T> List<T> read(String fileName, Class<T> targetClass) {
         try (Stream<T> stream = streamFromFile(fileName, targetClass)) {
             return stream.toList();
         }
     }
 
-    // 2. Ler String (O erro estava aqui: removemos o argumento boolean hasHeader)
     public <T> List<T> readString(String csvContent, Class<T> targetClass) {
         if (csvContent == null || csvContent.isBlank()) {
             return List.of();
         }
 
-        // Usa o separador do Builder OU detecta automático
         String effectiveSeparator = (this.separator != null) ?
                 this.separator :
                 detectSeparatorInLine(csvContent.lines().findFirst().orElse(""));
 
         Stream<String> lines = csvContent.lines();
 
-        // Usa a configuração 'hasHeader' da instância (criada pelo Builder)
         if (this.hasHeader) {
             lines = lines.skip(1);
         }
@@ -80,15 +71,11 @@ public class CsvRecordReader {
         return mapToStream(lines, effectiveSeparator, targetClass).toList();
     }
 
-    // 3. Processar (Stream)
     public <T> void process(String fileName, Class<T> targetClass, Consumer<T> processor) {
         try (Stream<T> stream = streamFromFile(fileName, targetClass)) {
             stream.forEach(processor);
         }
     }
-
-    // --- CORE (Lógica Interna) ---
-    // (Mantive os métodos auxiliares que já funcionavam)
 
     private <T> Stream<T> streamFromFile(String fileName, Class<T> targetClass) {
         Path path = Paths.get(fileName);
@@ -114,7 +101,6 @@ public class CsvRecordReader {
                 });
     }
 
-    // --- MAPPER PARA RECORDS ---
     private <T> T mapToRecord(String line, String separator, Class<T> recordClass) {
         try {
             RecordComponent[] components = recordClass.getRecordComponents();
@@ -126,7 +112,6 @@ public class CsvRecordReader {
         }
     }
 
-    // --- MAPPER PARA POJO (Classes Normais) ---
     private <T> T mapToPojo(String line, String separator, Class<T> pojoClass) {
         try {
             Constructor<T> constructor = pojoClass.getDeclaredConstructor();
@@ -146,8 +131,6 @@ public class CsvRecordReader {
             throw new CsvParsingException("Erro POJO: " + line, e);
         }
     }
-
-    // --- PARSERS E UTILITÁRIOS ---
 
     private Object[] parseLineValues(String line, String separator, Class<?>[] types) {
         String regex = separator + "(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)";
