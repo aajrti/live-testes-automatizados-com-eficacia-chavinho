@@ -49,6 +49,17 @@ public class CsvReader {
         return result;
     }
 
+    public <T> List<T> read(String fileName, CsvRowMapper<T> mapper) {
+        List<Map<String, String>> dadosBrutos = read(fileName);
+        List<T> listaTipada = new ArrayList<>();
+
+        for (Map<String, String> linha : dadosBrutos) {
+            T objeto = mapper.mapRow(linha);
+            listaTipada.add(objeto);
+        }
+        return listaTipada;
+    }
+
     public List<Map<String, String>> readString(String csvContent) {
         if (csvContent == null || csvContent.isBlank()) return List.of();
 
@@ -70,6 +81,8 @@ public class CsvReader {
             throw new CsvParsingException("Erro de IO ao processar arquivo: " + e.getMessage(), e);
         }
     }
+
+
 
     private void runPipeline(Stream<String> linesStream, char separator, Consumer<Map<String, String>> processor) {
         Iterator<String> iterator = linesStream.iterator();
